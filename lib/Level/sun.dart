@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
 import 'package:flame/flame.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 import 'package:flame/parallax.dart';
