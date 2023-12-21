@@ -15,7 +15,7 @@ class Castle extends SpriteComponent{
     position = Vector2(-90, 80);
     sprite = Sprite(castle);
   }
-
+  @override
   void update(double dt){
     super.update(dt);
   }
