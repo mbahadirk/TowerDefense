@@ -1,25 +1,51 @@
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
 import 'package:tower_defense/Level/background.dart';
 import 'package:tower_defense/Level/sky.dart';
 import 'package:tower_defense/Level/sun.dart';
-import 'package:tower_defense/components/tower1.dart';
-import 'package:tower_defense/components/tower2.dart';
-import 'package:tower_defense/components/tower3.dart';
-
-import '../components/Castle.dart';
+import 'package:tower_defense/components/enemy.dart';
+import '../components/Tower.dart';
 
 class TowerDefenseGame extends FlameGame{
   @override
   Future<void> onLoad() async{
+    final topTower = Tower(
+      Vector2(65,85),
+      50,
+      75,
+      "tower",
+    );
+    final midTower = Tower(
+      Vector2(95,110),
+      50,
+      75,
+      "tower",
+    );
+    final bottomTower = Tower(
+      Vector2(65,130),
+      50,
+      75,
+      "tower",
+    );
+    final castle = Tower(
+      Vector2(-50,40),
+      300,
+      300,
+      "castle",
+    );
+    final thief = Enemy(
+        Vector2(300, 100),
+        50,
+        50);
     addAll([
       Background(),
       Sun(),
       Sky(),
-      Tower1(),
-      Tower2(),
-      Tower3(),
-      Castle(),
+      castle,
+      topTower,
+      midTower,
+      bottomTower,
+      thief,
     ]);
 
   }

@@ -1,9 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
-import 'package:flame/parallax.dart';
 import '../game/assets.dart';
-import '../game/config.dart';
 
 class Sun extends SpriteComponent
     with HasGameRef<TowerDefenseGame>{
