@@ -4,6 +4,7 @@ import 'package:tower_defense/Level/background.dart';
 import 'package:tower_defense/Level/sky.dart';
 import 'package:tower_defense/Level/sun.dart';
 import 'package:tower_defense/components/enemy.dart';
+import 'package:tower_defense/tools(will%20be%20deleted)/pointer.dart';
 import '../components/Tower.dart';
 
 class TowerDefenseGame extends FlameGame{
@@ -34,9 +35,11 @@ class TowerDefenseGame extends FlameGame{
       "castle",
     );
     final thief = Enemy(
-        Vector2(300, 100),
-        50,
-        50);
+        Vector2(850, 0),
+        20,   //width
+        40,  //height
+        80
+    );
     addAll([
       Background(),
       Sun(),
@@ -46,6 +49,7 @@ class TowerDefenseGame extends FlameGame{
       midTower,
       bottomTower,
       thief,
+      MyPainter()
     ]);
 
   }
