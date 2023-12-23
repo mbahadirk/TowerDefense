@@ -15,6 +15,7 @@ class Enemy extends PositionComponent with HasGameRef<TowerDefenseGame>{
   late double heigth;
   bool isMoving = true;
   late Tower selectedTower;
+  var range = 10;
 
   Enemy(
       Vector2 position,
@@ -45,7 +46,7 @@ class Enemy extends PositionComponent with HasGameRef<TowerDefenseGame>{
   }
   void checkCollision(){
     // if (position.y in )
-    if (position.x <= 175) {
+    if (position.x <= 175 + range) {
       isMoving = false;
     }
   }
