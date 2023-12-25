@@ -7,23 +7,23 @@ import 'package:tower_defense/game/assets.dart';
 class Tower extends PositionComponent{
   var health = 100;
   bool alive = true;
-  final double width;
-  final double height;
   String type;
   late Sprite sprite;   // henüz tanımlanmamış ifade olan sprite'a late ile
                         // sonradan tanımlanacağını belirttik
 
   Tower(
       Vector2 position,
-      this.width,
-      this.height,
-      this.type) : super(position: position);
+      Vector2 size,
+      this.type
+      ) : super(position: position,size:size);
+  @override
+  bool debugMode = true;    // debug mod açar
 
   @override
   Future<void> onLoad() async{
     final towerImage = await Flame.images.load(Assets.getAsset(this.type));
     sprite = Sprite(towerImage);
-    size = Vector2(this.width, this.height);
+    size = size;
   }
 
   @override

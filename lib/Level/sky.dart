@@ -6,14 +6,15 @@ import 'package:flame/parallax.dart';
 import '../../game/assets.dart';
 import '../../game/config.dart';
 
-class Sky extends ParallaxComponent<TowerDefenseGame> with HasGameRef<TowerDefenseGame>{
+class Sky extends ParallaxComponent<TowerDefenseGame>
+    with HasGameRef<TowerDefenseGame>{
   Sky();
 
   @override
   Future<void> onLoad() async{
     final cloud = await Flame.images.load(Assets.clouds2);
     final resizedCloud = await cloud.resize(Vector2(600, 200));
-    position = Vector2(x, - (gameRef.size.y - Config.cloudHeight));
+    position = Vector2(x,-Config.cloudHeight);
     parallax = Parallax([
       ParallaxLayer(
         ParallaxImage(

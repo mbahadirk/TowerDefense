@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -8,60 +9,43 @@ import 'package:tower_defense/game/tower_defense_game.dart';
 import 'Tower.dart';
 
 
-class Enemy extends PositionComponent with HasGameRef<TowerDefenseGame>{
+class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame> {
   var health = 100;
-  late double speed;
-  late double width;
-  late double heigth;
+  double speed = 18;
   bool isMoving = true;
   late Tower selectedTower;
   var range = 10;
-
+  late String charName;
+  late String state;
   Enemy(
       Vector2 position,
-      this.width,
-      this.heigth,
-      double speed,
-      ) : super(position: position)
-  {this.speed = speed;}
+      Vector2 size,
+      String charName,
+      ) : super(position: position, size:size){charName;}
 
-  // @override
-  // Future<void> onLoad() async {
-  //   final image = await Flame.images.load('enemies/thief/walk.png'); // Düşman resminizin yolu
-  //   final jsonData = await Flame.bundle.loadString('assets/images/enemies/thief/walk.json'); // JSON dosyanızın yolu
-  //   final data = jsonDecode(jsonData);
-  //   final animation = SpriteAnimation.fromAsepriteData(image, data);
-  //   this.animation = animation;
-  // }
-
+  bool debugMode = true;    //debug mode açar
 
   @override
-  void render(Canvas canvas) {
-    super.render(canvas); // Bu, animasyonu çizer
-
-    // Ekstra çizimlerinizi burada yapabilirsiniz
-    final paint = Paint()..color = Color(0xFFFF0000); // Kırmızı renk
-    final enemyRect = Rect.fromLTWH(0, 200 , this.width, this.heigth); // Pozisyon ve boyut
-    canvas.drawRect(enemyRect, paint);
+  Future<void> onLoad() async {
+    state = "walk";
+    charName = "soldier";
+    final image = await Flame.images.load('enemies/$charName/$state.png'); // Düşman resminizin yolu
+    final jsonData = await Flame.bundle.loadString('assets/images/enemies/$charName/$state.json'); // JSON dosyanızın yolu
+    final data = jsonDecode(jsonData);
+    final animationData = SpriteAnimationData.sequenced(
+      amount: data['frames'].length, // kare sayısı
+      amountPerRow: 4,
+      stepTime: 0.08,   // her kare arasındaki süre, saniye cinsinden
+      textureSize: Vector2(480, 270), // her karenin boyutu
+    );
+    final animation = SpriteAnimation.fromFrameData(image, animationData);
+    this.animation = animation; // Animasyonu bileşene ata
   }
-  void checkCollision(){
-    // if (position.y in )
-    if (position.x <= 175 + range) {
-      isMoving = false;
-    }
-  }
 
-  // void towerSelection(){
-  //   if (Roads.road1.contains(position.y)){
-  //     selectedTower = Tower();
-  //   }
-  // }
 
   @override
   void update(double dt) {
     super.update(dt);
-
-    checkCollision();
 
     if (isMoving) {
       position.x -= speed * dt;    //düşman hareketi hıza bağlı

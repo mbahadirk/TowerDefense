@@ -1,6 +1,6 @@
 
 class Assets {
-  static const background = 'components/background_Grass.png';
+  static const background = 'components/background.png';
 
   static const sideTower = 'components/tower.png';
   static const castle = 'components/castle.png';
