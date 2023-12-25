@@ -3,13 +3,12 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:tower_defense/game/assets.dart';
+import 'package:tower_defense/game/tower_defense_game.dart';
 
-class Tower extends PositionComponent{
+class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
   var health = 100;
   bool alive = true;
   String type;
-  late Sprite sprite;   // henüz tanımlanmamış ifade olan sprite'a late ile
-                        // sonradan tanımlanacağını belirttik
 
   Tower(
       Vector2 position,
@@ -21,25 +20,25 @@ class Tower extends PositionComponent{
 
   @override
   Future<void> onLoad() async{
-    final towerImage = await Flame.images.load(Assets.getAsset(this.type));
-    sprite = Sprite(towerImage);
+    final tower = await Flame.images.load(Assets.getAsset(this.type));
+    position = position;
     size = size;
+    sprite = Sprite(tower);
+  }
+
+
+  @override
+  void update(double dt){
+    super.update(dt);
   }
 
   @override
   void render(Canvas canvas) {
-    if (alive == true){       // hayatta olan kule çizilir
-    sprite.render(canvas, position: position, size: size);
-    }
-
+    super.render(canvas);
     final paint = Paint()..color = Color(0xFFFF0000); // Kırmızı renk
     final double healthBarWidth = width * (health / 100); // Can değerine göre genişlik
     final double healthBarHeight = 3; // Yükseklik
-    final healthBarRect = Rect.fromLTWH(position.x, position.y - 10, healthBarWidth, healthBarHeight); // Pozisyon ve boyut
+    final healthBarRect = Rect.fromLTWH(0, -10, healthBarWidth, healthBarHeight); // Pozisyon ve boyut
     canvas.drawRect(healthBarRect, paint);
-  }
-
-  void update(double dt){
-    super.update(dt);
   }
 }

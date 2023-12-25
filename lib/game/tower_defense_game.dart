@@ -25,38 +25,44 @@ class TowerDefenseGame extends FlameGame{
     cam.viewfinder.anchor = Anchor.topLeft;
 
     final topTower = Tower(
-      Vector2(65,85),
+      Vector2(130,180),
       Vector2(50,75),
       "tower",
     );
     final midTower = Tower(
-      Vector2(95,110),
+      Vector2(190,230),
       Vector2(50,75),
       "tower",
     );
     final bottomTower = Tower(
-      Vector2(65,130),
+      Vector2(130,280),
       Vector2(50,75),
       "tower",
     );
-    // final castle = Tower(
-    //   Vector2(-50,40),
-    //   Vector2(300,300),
-    //   "castle",
-    // );
+    final castle = Tower(
+      Vector2(-40,80),
+      Vector2(150,300),
+      "castle",
+    );
     final thief = Enemy(
       Vector2(500, 200),
       Vector2(50,50),
       "thief"
     );
+    final enemy1 = Enemy(
+        Vector2(500, 200),
+        Vector2(50,50),
+        "thief"
+    );
     addAll([
       cam,
       world,
-      // castle,
+      castle,
       topTower,
       midTower,
       bottomTower,
       thief,
+      enemy1,
       MyPainter(),
     ]);
     final enemy = enemyAnimation();

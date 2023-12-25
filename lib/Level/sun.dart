@@ -18,7 +18,7 @@ class Sun extends SpriteComponent
   Future<void> onLoad() async{
     final sun = await Flame.images.load(Assets.sun);
     size = Vector2(150, 150);
-    position = Vector2(600, 100);
+    position = Vector2(700, 100);
     sprite = Sprite(sun);
     paint = Paint()..color=Color(0x80FFFFFF); // Bu, güneşi yarı saydam yapar.
     anchor = Anchor.center;
