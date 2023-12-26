@@ -2,27 +2,30 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:tower_defense/Level/background.dart';
 import 'package:tower_defense/Level/level.dart';
-import 'package:tower_defense/Level/sky.dart';
-import 'package:tower_defense/Level/sun.dart';
-import 'package:tower_defense/components/enemy.dart';
+import 'package:tower_defense/game/wave.dart';
 import 'package:tower_defense/tools(will%20be%20deleted)/pointer.dart';
 import '../components/Tower.dart';
-import '../components/enemyAnimation.dart';
+import '../components/enemy.dart';
 
 class TowerDefenseGame extends FlameGame{
   late final CameraComponent cam;
+
+  @override
   Color backgroundColor() => const Color(0xFF87E127);
 
   @override
   final world = Level();
+
 
   @override
   Future<void> onLoad() async{
 
     cam = CameraComponent.withFixedResolution(world: Level(),width: 1920, height: 1080);
     cam.viewfinder.anchor = Anchor.topLeft;
+
+    final wave = Wave(5);
+
 
     final topTower = Tower(
       Vector2(130,180),
@@ -44,16 +47,6 @@ class TowerDefenseGame extends FlameGame{
       Vector2(150,300),
       "castle",
     );
-    final thief = Enemy(
-      Vector2(500, 200),
-      Vector2(50,50),
-      "thief"
-    );
-    final enemy1 = Enemy(
-        Vector2(500, 200),
-        Vector2(50,50),
-        "thief"
-    );
     addAll([
       cam,
       world,
@@ -61,12 +54,9 @@ class TowerDefenseGame extends FlameGame{
       topTower,
       midTower,
       bottomTower,
-      thief,
-      enemy1,
       MyPainter(),
+      Wave(10),
     ]);
-    final enemy = enemyAnimation();
-    await add(enemy); // enemy bileşenini yükle ve ekle
 
   }
 

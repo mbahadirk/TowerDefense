@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flutter/material.dart';
 import 'package:tower_defense/game/assets.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 
@@ -16,7 +17,7 @@ class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
       this.type
       ) : super(position: position,size:size);
   @override
-  bool debugMode = true;    // debug mod açar
+  // bool debugMode = true;    // debug mod açar
 
   @override
   Future<void> onLoad() async{
@@ -34,11 +35,20 @@ class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
 
   @override
   void render(Canvas canvas) {
-    super.render(canvas);
+    // can barı
     final paint = Paint()..color = Color(0xFFFF0000); // Kırmızı renk
     final double healthBarWidth = width * (health / 100); // Can değerine göre genişlik
     final double healthBarHeight = 3; // Yükseklik
     final healthBarRect = Rect.fromLTWH(0, -10, healthBarWidth, healthBarHeight); // Pozisyon ve boyut
     canvas.drawRect(healthBarRect, paint);
+
+    // gölge
+    final shadowPaint = Paint()
+      ..color = Colors.black.withOpacity(0.2);
+    final shadowOffset = Offset(size.x/3, size.y);
+    final shadowRadius = size.length/5 ;
+    canvas.drawCircle(shadowOffset, shadowRadius, shadowPaint);
+
+    super.render(canvas);
   }
 }
