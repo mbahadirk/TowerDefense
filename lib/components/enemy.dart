@@ -1,31 +1,38 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:tower_defense/components/towerGroup.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 
 
-class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame> {
+class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, CollisionCallbacks {
   var health = 100;
-  double speed = 18;
+  double speed = 30;
   bool isMoving = true;
   var range = 10;
   late String charName;
   late String state;
   bool isAlive = true;
 
+  TowerGroup towerGroup;  // TowerGroup nesnesi
+
   Enemy(
       Vector2 position,
       Vector2 size,
       String charName,
+      this.towerGroup,  // TowerGroup nesnesini parametre olarak al
       ) : super(position: position, size:size){
     this.charName = charName;
     this.state = "walk";  // Varsayılan durumu "walk" olarak ayarladım
   }
 
-  // bool debugMode = true;    //debug mode açar
+  bool debugMode = true;    //debug mode açar
+  late ShapeHitbox hitbox;
+  bool collision = false;
 
   @override
   Future<void> onLoad() async {
@@ -40,7 +47,26 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame> {
     );
     final animation = SpriteAnimation.fromFrameData(image, animationData);
     this.animation = animation; // Animasyonu bileşene ata
+
+    hitbox = RectangleHitbox();
+    add(hitbox);
   }
+
+  @override
+  void onCollision(
+      Set<Vector2> intersectionPoints,
+      PositionComponent other,
+      ) {
+    super.onCollision(intersectionPoints, other);
+    for (var tower in towerGroup.towers) {
+      // print("for works ${tower}");
+      if (tower == other){
+        print("allah çarpsın works");
+      }
+
+    }
+  }
+
 
   @override
   void render(Canvas canvas) {
@@ -72,5 +98,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame> {
     if (isMoving) {
       position.x -= speed * dt;    //düşman hareketi hıza bağlı
     }
+
+    onCollisionCallback;
   }
 }

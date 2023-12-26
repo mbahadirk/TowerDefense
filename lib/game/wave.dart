@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flame/components.dart';
+import 'package:tower_defense/components/towerGroup.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 import 'package:flame/components.dart';
 
@@ -27,7 +28,7 @@ class Wave extends Component with HasGameRef<TowerDefenseGame> {
       [sY+105, sY+130],
     ];
     final range = roads[random.nextInt(roads.length)];
-    final xCoord = 500 + random.nextDouble() * (1000 - 500);
+    final xCoord = 500 + random.nextDouble() * (1000 - 300);
     final yCoord = range[0] + random.nextDouble() * (range[1] - range[0]);
 
     final characters = ["archer", "knight", "merchant", "priest", "soldier", "thief"];
@@ -37,6 +38,7 @@ class Wave extends Component with HasGameRef<TowerDefenseGame> {
       Vector2(xCoord, yCoord),
       Vector2(70, 40),
       charName,
+      TowerGroup()
     );
     gameRef.add(enemy);
   }

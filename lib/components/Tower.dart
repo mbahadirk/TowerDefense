@@ -1,12 +1,13 @@
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:tower_defense/game/assets.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 
-class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
+class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>, CollisionCallbacks{
   var health = 100;
   bool alive = true;
   String type;
@@ -16,8 +17,11 @@ class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
       Vector2 size,
       this.type
       ) : super(position: position,size:size);
-  @override
-  // bool debugMode = true;    // debug mod açar
+  //bool debugMode = true;    // debug mod açar
+  late ShapeHitbox hitbox;
+  final _collisionStartColor = Colors.amber;
+  final _defaultColor = Colors.cyan;
+  bool carpisma = false;
 
   @override
   Future<void> onLoad() async{
@@ -25,6 +29,13 @@ class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>{
     position = position;
     size = size;
     sprite = Sprite(tower);
+    final defaultPaint = Paint()
+      ..color = _defaultColor
+      ..style = PaintingStyle.stroke;
+    hitbox = RectangleHitbox()
+      ..paint = defaultPaint
+      ..renderShape = true;
+    add(hitbox);
   }
 
 
