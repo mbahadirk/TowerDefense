@@ -5,20 +5,54 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
+import 'package:tower_defense/components/Tower.dart';
 import 'package:tower_defense/components/towerGroup.dart';
 import 'package:tower_defense/game/tower_defense_game.dart';
 
+enum PlayerState{
+  walk,
+  attack,
+  hurt,
+  die
+}
 
-class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, CollisionCallbacks {
-  var health = 100;
+
+class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,CollisionCallbacks {
   double speed = 30;
-  bool isMoving = true;
+  var health = 100;
   var range = 10;
+  var collidedWith = Component();
   late String charName;
+  late ShapeHitbox hitbox;
   late String state;
+  bool isMoving = true;
   bool isAlive = true;
+  bool debugMode = true;    //debug mode açar
+  bool collision = false;
 
-  TowerGroup towerGroup;  // TowerGroup nesnesi
+  late final SpriteAnimation walkAnimation;
+  late final SpriteAnimation attackAnimation;
+  late final SpriteAnimation hurtAnimation;
+  late final SpriteAnimation dieAnimation;
+
+  TowerGroup towerGroup;
+  set current(PlayerState state) {
+    switch (state) {
+      case PlayerState.walk:
+        this.state = "walk";
+        break;
+      case PlayerState.attack:
+        this.state = "attack";
+        break;
+      case PlayerState.hurt:
+        this.state = "hurt";
+        break;
+      case PlayerState.die:
+        this.state = "die";
+        break;
+    }
+  }
+
 
   Enemy(
       Vector2 position,
@@ -30,9 +64,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, 
     this.state = "walk";  // Varsayılan durumu "walk" olarak ayarladım
   }
 
-  bool debugMode = true;    //debug mode açar
-  late ShapeHitbox hitbox;
-  bool collision = false;
+
+
 
   @override
   Future<void> onLoad() async {
@@ -50,21 +83,6 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, 
 
     hitbox = RectangleHitbox();
     add(hitbox);
-  }
-
-  @override
-  void onCollision(
-      Set<Vector2> intersectionPoints,
-      PositionComponent other,
-      ) {
-    super.onCollision(intersectionPoints, other);
-    for (var tower in towerGroup.towers) {
-      // print("for works ${tower}");
-      if (tower == other){
-        print("allah çarpsın works");
-      }
-
-    }
   }
 
 
@@ -89,6 +107,24 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, 
     super.render(canvas);
   }
 
+  @override
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints,
+      PositionComponent other,
+      ) {
+    super.onCollisionStart(intersectionPoints, other);
+    print(collidedWith);
+
+    // çarpıştığı objeye göre state ayarları burada if state'ler ile yapılır
+    if (other is Tower) {
+      current = PlayerState.attack;
+      attackTower();
+    }
+  }
+  void attackTower(){
+    isMoving = false;
+    // TODO! add attack function here
+  }
 
 
   @override
@@ -98,7 +134,5 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>, 
     if (isMoving) {
       position.x -= speed * dt;    //düşman hareketi hıza bağlı
     }
-
-    onCollisionCallback;
   }
 }
