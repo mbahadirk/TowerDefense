@@ -37,7 +37,7 @@ class Wave extends Component with HasGameRef<TowerDefenseGame> {
     final enemy = Enemy(
       Vector2(xCoord, yCoord),
       Vector2(70, 40),
-      charName,
+      "thief",
       TowerGroup()
     );
     gameRef.add(enemy);

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flame/cache.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -21,11 +22,12 @@ class Tower extends SpriteComponent with HasGameRef<TowerDefenseGame>, Collision
   late ShapeHitbox hitbox;
   final _collisionStartColor = Colors.amber;
   final _defaultColor = Colors.cyan;
-  bool carpisma = false;
+  // bool carpisma = false;
+
 
   @override
   Future<void> onLoad() async{
-    final tower = await Flame.images.load(Assets.getAsset(this.type));
+    final tower = await Flame.images.load("components/$type.png");
     position = position;
     size = size;
     sprite = Sprite(tower);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
@@ -12,12 +13,12 @@ import 'package:tower_defense/game/tower_defense_game.dart';
 enum PlayerState{
   walk,
   attack,
+  die,
   hurt,
-  die
 }
 
 
-class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,CollisionCallbacks {
+class Enemy extends SpriteAnimationGroupComponent with HasGameRef<TowerDefenseGame>,CollisionCallbacks {
   double speed = 30;
   var health = 100;
   var range = 10;
@@ -29,29 +30,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,C
   bool isAlive = true;
   bool debugMode = true;    //debug mode açar
   bool collision = false;
-
-  late final SpriteAnimation walkAnimation;
-  late final SpriteAnimation attackAnimation;
-  late final SpriteAnimation hurtAnimation;
-  late final SpriteAnimation dieAnimation;
-
   TowerGroup towerGroup;
-  set current(PlayerState state) {
-    switch (state) {
-      case PlayerState.walk:
-        this.state = "walk";
-        break;
-      case PlayerState.attack:
-        this.state = "attack";
-        break;
-      case PlayerState.hurt:
-        this.state = "hurt";
-        break;
-      case PlayerState.die:
-        this.state = "die";
-        break;
-    }
-  }
+  double stepTime = 0.08;
 
 
   Enemy(
@@ -61,30 +41,62 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,C
       this.towerGroup,  // TowerGroup nesnesini parametre olarak al
       ) : super(position: position, size:size){
     this.charName = charName;
-    this.state = "walk";  // Varsayılan durumu "walk" olarak ayarladım
+    // this.state = "walk";  // Varsayılan durumu "walk" olarak ayarladım
   }
 
 
+  SpriteAnimation _spriteAnimation(String state, int amount)  {
+    var a = game.images.load('enemies/$charName/$state.png');
+    return SpriteAnimation.fromFrameData(
+      game.images.fromCache('enemies/$charName/$state.png'),
+      SpriteAnimationData.sequenced(
+        amount: 18,
+        stepTime: stepTime,
+        textureSize: Vector2.all(32),
+      ),
+    );
+  }
+  void _loadAllAnimations() {
+    final dieAnimation = _spriteAnimation('die', 12);
+    final attackAnimation = _spriteAnimation('attack', 1);
+    final walkAnimation = _spriteAnimation('walk', 1);
+    final hurtAnimation = _spriteAnimation('hurt', 7);
+
+    // List of all animations
+    animations = {
+      PlayerState.walk: walkAnimation,
+      PlayerState.attack: attackAnimation,
+      PlayerState.hurt: hurtAnimation,
+      PlayerState.die: dieAnimation,
+    };
+
+    // Set current animation
+    current = PlayerState.walk;
+  }
 
 
   @override
-  Future<void> onLoad() async {
-    final image = await Flame.images.load('enemies/$charName/$state.png'); // Düşman resminizin yolu
-    final jsonData = await Flame.bundle.loadString('assets/images/enemies/$charName/$state.json'); // JSON dosyanızın yolu
-    final data = jsonDecode(jsonData);
-    final animationData = SpriteAnimationData.sequenced(
-      amount: data['frames'].length, // kare sayısı
-      amountPerRow: 4,
-      stepTime: 0.08,   // her kare arasındaki süre, saniye cinsinden
-      textureSize: Vector2(480, 270), // her karenin boyutu
-    );
-    final animation = SpriteAnimation.fromFrameData(image, animationData);
-    this.animation = animation; // Animasyonu bileşene ata
-
+  FutureOr<void> onLoad() async {
+    for (var state in ['walk', 'attack', 'hurt', 'die']) {
+      await game.images.load('enemies/$charName/$state.png');
+    }
+    _loadAllAnimations();
+    // final image = await Flame.images.load('enemies/$charName/$state.png'); // Düşman resminizin yolu
+    // final jsonData = await Flame.bundle.loadString('assets/images/enemies/$charName/$state.json'); // JSON dosyanızın yolu
+    // final data = jsonDecode(jsonData);
+    // final animationData = SpriteAnimationData.sequenced(
+    //   amount: data['frames'].length, // kare sayısı
+    //   amountPerRow: 4,
+    //   stepTime: 0.08,   // her kare arasındaki süre, saniye cinsinden
+    //   textureSize: Vector2(480, 270), // her karenin boyutu
+    // );
+    // final animation = SpriteAnimation.fromFrameData(image, animationData);
+    // this.animation = animation; // Animasyonu bileşene ata
+    this.animations = animations ;
     hitbox = RectangleHitbox();
     add(hitbox);
+    return super.onLoad();
   }
-
 
   @override
   void render(Canvas canvas) {
@@ -102,7 +114,6 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,C
     final healthBarRect = Rect.fromLTWH(size.x/2-healthBarWidth/2, 3, healthBarWidth, healthBarHeight); // Pozisyon ve boyut
     canvas.drawRect(healthBarRect, paint);
 
-
     // eklenmeden düşman çizilmiyor
     super.render(canvas);
   }
@@ -117,12 +128,13 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,C
 
     // çarpıştığı objeye göre state ayarları burada if state'ler ile yapılır
     if (other is Tower) {
-      current = PlayerState.attack;
-      attackTower();
+      attackTower(other);
     }
   }
-  void attackTower(){
+  void attackTower(tower){
     isMoving = false;
+    tower.health -= 50;
+    current = PlayerState.attack;
     // TODO! add attack function here
   }
 
@@ -130,9 +142,11 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<TowerDefenseGame>,C
   @override
   void update(double dt) {
     super.update(dt);
-
     if (isMoving) {
       position.x -= speed * dt;    //düşman hareketi hıza bağlı
     }
+    super.update(dt);
+    // print(current.toString());
   }
+
 }
