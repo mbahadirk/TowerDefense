@@ -9,7 +9,7 @@ import 'package:tower_defense/tools(will%20be%20deleted)/pointer.dart';
 import '../components/Tower.dart';
 import '../components/enemy.dart';
 
-class TowerDefenseGame extends FlameGame with HasCollisionDetection{
+class TowerDefenseGame extends FlameGame with HasCollisionDetection {
   late final CameraComponent cam;
 
   @override
@@ -18,11 +18,13 @@ class TowerDefenseGame extends FlameGame with HasCollisionDetection{
   @override
   final world = Level();
 
-
   @override
-  Future<void> onLoad() async{
-
-    cam = CameraComponent.withFixedResolution(world: Level(),width: 1920, height: 1080);
+  Future<void> onLoad() async {
+    cam = CameraComponent.withFixedResolution(
+      world: Level(),
+      width: 1920,
+      height: 1080,
+    );
     cam.viewfinder.anchor = Anchor.topLeft;
 
     addAll([
@@ -30,9 +32,7 @@ class TowerDefenseGame extends FlameGame with HasCollisionDetection{
       world,
       MyPainter(),
       Wave(10),
-      TowerGroup()
+      TowerGroup(),
     ]);
-
   }
-
 }
