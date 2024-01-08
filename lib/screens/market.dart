@@ -10,7 +10,7 @@ class GameMarketScreen extends StatefulWidget {
     Key? key,
     this.onSelectBackground,
     this.onSelectCharacter,
-    required this.selectedCharacter,
+    required this.selectedCharacter, required selectedBackground,
   }) : super(key: key);
 
   @override

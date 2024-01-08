@@ -62,6 +62,13 @@ flutter:
     - assets/backGrounds/
     - assets/characters/
     - assets/assets/characters/
+    - assets/images/components/
+    - assets/images/enemies/archer/
+    - assets/images/enemies/knight/
+    - assets/images/enemies/merchant/
+    - assets/images/enemies/priest/
+    - assets/images/enemies/soldier/
+    - assets/images/enemies/thief/
 
 
 

@@ -1,20 +1,34 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:tower_defense_game/screens/game/tower_defense_game.dart';
 import 'background.dart';
 import 'market.dart';
 import 'options.dart';
-import 'deneme.dart';
 import 'characters.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MainMenu(),
     );
+  }
+}
+
+class TowerDefenseGameScreen extends StatelessWidget {
+  final TowerDefenseGame game;
+
+  const TowerDefenseGameScreen({super.key, required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return GameWidget(game: game);
   }
 }
 
@@ -47,7 +61,7 @@ class MainMenu extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 100.0),
                     child: Text(
                       'Tower Defense',
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 65.0,
                         shadows: const [
                           Shadow(
@@ -94,14 +108,15 @@ class MainMenu extends StatelessWidget {
     );
   }
 
-  void navigateToGame(BuildContext context) async {
-    await Navigator.of(context).push(
+  void navigateToGame(BuildContext context) {
+    final game = TowerDefenseGame();
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => TappingGame(),
+        builder: (context) => Material(
+          child: TowerDefenseGameScreen(game: game),
+        ),
       ),
     );
-
-
   }
 
 
@@ -175,6 +190,7 @@ class MarketButton extends StatelessWidget {
                 onSelectBackground: onSelectBackground,
                 onSelectCharacter: onSelectCharacter,
                 selectedCharacter: selectedCharacter,
+                selectedBackground: selectedBackground,
               ),
             ),
           );
